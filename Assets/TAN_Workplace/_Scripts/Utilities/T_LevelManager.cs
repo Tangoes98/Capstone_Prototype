@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,10 +19,9 @@ public class T_LevelManager : MonoBehaviour
 
     #region =============== Variables =======================
 
-    [SerializeField] GameObject _enemySpawner;
-    [SerializeField] GameObject _playerSpawner;
-    [SerializeField] T_Unit[] _enemyArray;
+    [SerializeField] GameObject _unitSpawner;
     [SerializeField] List<T_Unit> _enemyList;
+    [SerializeField] List<T_Unit> _friendList;
 
 
 
@@ -38,8 +36,8 @@ public class T_LevelManager : MonoBehaviour
     #endregion
     #region =================== Public ============================
 
-    //public T_Unit[] G_GetEnemies() => _enemyArray;
     public List<T_Unit> G_GetEnemyList() => _enemyList;
+    public List<T_Unit> G_GetFriendList() => _friendList;
 
 
 
@@ -66,8 +64,18 @@ public class T_LevelManager : MonoBehaviour
 
     void GetAllEnemies()
     {
-        T_Unit[] enemies = _enemySpawner.GetComponentsInChildren<T_Unit>();
-        _enemyList = new(enemies);
+        T_Unit[] units = _unitSpawner.GetComponentsInChildren<T_Unit>();
+        foreach (var unit in units)
+        {
+            if (unit.G_IsEnemyUnit()) _enemyList.Add(unit);
+            else _friendList.Add(unit);
+        }
+
+
+
+
+
+
     }
 
 
