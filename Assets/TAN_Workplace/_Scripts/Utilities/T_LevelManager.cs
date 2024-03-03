@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,7 +41,7 @@ public class T_LevelManager : MonoBehaviour
     public List<T_Unit> G_GetFriendList() => _friendList;
 
 
-
+    public event Action Event_GameOver;
 
 
 
@@ -52,17 +53,17 @@ public class T_LevelManager : MonoBehaviour
     #region ================ MonoBehaviour =======================
     private void Start()
     {
-        GetAllEnemies();
+        GetAllUnitIntoUnitList();
 
     }
     private void Update()
     {
-
+        CheckUnitListEmptiness();
     }
     #endregion
     #region =============== Methods =======================
 
-    void GetAllEnemies()
+    void GetAllUnitIntoUnitList()
     {
         T_Unit[] units = _unitSpawner.GetComponentsInChildren<T_Unit>();
         foreach (var unit in units)
@@ -70,12 +71,33 @@ public class T_LevelManager : MonoBehaviour
             if (unit.G_IsEnemyUnit()) _enemyList.Add(unit);
             else _friendList.Add(unit);
         }
+    }
+    void CheckUnitListEmptiness()
+    {
+        if (IsUnitListEmpty(_enemyList) || IsUnitListEmpty(_friendList))
+        {
+            // Game Over
+            Event_GameOver?.Invoke();
+        }
+        if (IsUnitListEmpty(_enemyList))
+        {
+            // Player wins
+
+        }
+        if (IsUnitListEmpty(_friendList))
+        {
+            // Enemy wins
+
+        }
 
 
+    }
 
 
-
-
+    bool IsUnitListEmpty(List<T_Unit> untiList)
+    {
+        if (untiList.Count < 1) return true;
+        else return false;
     }
 
 

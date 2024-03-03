@@ -23,6 +23,13 @@ public class T_Unit : MonoBehaviour
     T_UIManager _UIManager;
 
 
+    [SerializeField] bool _isActive;
+
+    //todo: Read Scriptable Object here
+    [SerializeField] SO_UnitAttribute _unitAttributeSO;
+    //[SerializeField] UnitAttribute _unitAttributeInfo;
+
+
     [Header("DEBUG_VIEW")]
     [SerializeField] bool _attackAvaliable;
     [SerializeField] UnitCombatState _unitCombatStates;
@@ -42,21 +49,24 @@ public class T_Unit : MonoBehaviour
     [SerializeField] float _attackSpeed;
     float _attackTimer;
 
-
     NavMeshAgent _agent;
     #endregion
     #region =================== public =========================
     public bool G_IsEnemyUnit() => _isEnemy;
     public float G_GetAttackCD_UIFillAmount() => _attackTimer / _attackSpeed;
 
-
-
-
+    public T_Unit G_GetAttackTarget() => _attackTarget;
+    public event Action Event_DealDamage;
 
     #endregion
     #region ================= MonoBehaviour ======================
+    void Awake()
+    {
+        // _unitAttributeInfo. = _unitAttributeSO;
+    }
     void Start()
     {
+
         _agent = this.GetComponent<NavMeshAgent>();
 
         _LevelManager = T_LevelManager.Instance;
@@ -68,12 +78,19 @@ public class T_Unit : MonoBehaviour
         _uniMovementStates = UnitMovementState.StopMoving;
 
         _UIManager.Event_BattleStart += OnBattleStartEvent;
+        _LevelManager.Event_GameOver += OnGameOverEvent;
+
+        _isActive = false;
+
 
 
     }
 
     void Update()
     {
+        if (!_isActive) return;
+
+
         TargetValidation();
         IsAbleToCombat();
 
@@ -112,21 +129,6 @@ public class T_Unit : MonoBehaviour
                 StopMovement();
                 break;
         }
-
-        // switch (_unitReconStates)
-        // {
-        //     case UnitReconState.Idle:
-
-        //         break;
-        //     case UnitReconState.Recon:
-        //         LookingForOpponents();
-        //         break;
-        // }
-
-
-
-
-
     }
     private void OnDrawGizmos()
     {
@@ -147,14 +149,16 @@ public class T_Unit : MonoBehaviour
     // ----- StateMachine related ------
     void SwitchCombatState(UnitCombatState st) => _unitCombatStates = st;
     void SwitchMovementState(UnitMovementState st) => _uniMovementStates = st;
-    // void SwitchReconState(UnitReconState st) => _unitReconStates = st;
-
-
 
     #region -------------- Event methods --------------
     void OnBattleStartEvent()
     {
+        _isActive = true;
+    }
 
+    void OnGameOverEvent()
+    {
+        _isActive = false;
     }
     #endregion
     #region ------------------- Utilities --------------------------------
@@ -168,7 +172,7 @@ public class T_Unit : MonoBehaviour
     {
         if (!targetUnit)
         {
-            Debug.Log("No enemies insight");
+            //Debug.Log("No enemies insight");
             SwitchMovementState(UnitMovementState.OnMoving);
             return;
         }
@@ -215,7 +219,8 @@ public class T_Unit : MonoBehaviour
         if (target.TryGetComponent(out T_UnitHealth health))
         {
             health.G_DealDamage(_attackValue);
-            Debug.Log($"Deal {_attackValue} damage to {target}");
+            //Debug.Log($"Deal {_attackValue} damage to {target}");
+            Event_DealDamage?.Invoke();
 
             SwitchCombatState(UnitCombatState.ActionCoolDown);
         }
@@ -229,12 +234,6 @@ public class T_Unit : MonoBehaviour
             SwitchCombatState(UnitCombatState.ReadyToCombat);
         }
     }
-
-
-
-
-
-
     #endregion
     #region -------------- Scouting ------------------
     void LookingForOpponents()
@@ -249,10 +248,9 @@ public class T_Unit : MonoBehaviour
             if (Vector3.Distance(unit.transform.position, this.transform.position) > range) continue;
 
             _attackTarget = unit;
-            Debug.Log("Found enemy");
+            //Debug.Log("Found enemy");
             SwitchMovementState(UnitMovementState.StopMoving);
             SwitchCombatState(UnitCombatState.ReadyToCombat);
-            //SwitchCombatState(UnitCombatState.Combat);
         }
     }
     #endregion
@@ -284,9 +282,6 @@ public class T_Unit : MonoBehaviour
         _agent.speed = 0f;
     }
     #endregion
-
-
-
 
     #endregion
 

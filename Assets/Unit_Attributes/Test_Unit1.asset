@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7956b78e62098444c9e76d165feebcc3, type: 3}
+  m_Name: Test_Unit1
+  m_EditorClassIdentifier: 
+  UnitName: Tango
+  UnitBindA: TBA
+  UnitBindALevel: 2
+  UnitBindB: TBB
+  UnitBindBLevel: 1
+  Health: 0
+  Attack: 0
+  Defence: 0
+  AttackSpeed: 0
+  CriticalHitRate: 0
+  SkillStrength: 0
+  MaxEnergy: 0
+  ActiveSkill: 
+  SkillDuration: 0
+  Range: 0
+  EnergyAutoRecovery: 0
+  EnergyDamageRecovery: 0

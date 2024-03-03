@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,8 @@ public class T_UnitHealth : MonoBehaviour
     public bool G_IsDead() => _isDead;
     public float G_HealthImageFillAmount() => GetHealthValueNormalized();
 
+    public event Action<float> Take_Damage_Event;
+
 
 
 
@@ -43,6 +46,7 @@ public class T_UnitHealth : MonoBehaviour
     void TakeDamage(float damage)
     {
         _health -= damage;
+        Take_Damage_Event?.Invoke(damage);
         if (_health <= 0) _health = 0;
         if (_health == 0) UnitDied();
     }

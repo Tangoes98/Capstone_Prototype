@@ -1,0 +1,21 @@
+{
+    "UnitAttribute": {
+        "UnitName": "Tan ",
+        "UnitBindA": "TanBindA ",
+        "UnitBindALevel": "1 ",
+        "UnitBindB": "TanBindB ",
+        "UnitBindBLevel": "2 ",
+        "Health": "100 ",
+        "Attack": "120 ",
+        "Defence": "130 ",
+        "AttackSpeed": "140 ",
+        "CriticalHitRate": "50 ",
+        "SkillStrength": "150 ",
+        "MaxEnergy": "10 ",
+        "ActiveSkill": "TanAction ",
+        "SkillDuration": "5 ",
+        "Range": "20 ",
+        "EnergyAutoRecovery": "1 ",
+        "EnergyDamageRecovery": "2 "
+    }
+}
