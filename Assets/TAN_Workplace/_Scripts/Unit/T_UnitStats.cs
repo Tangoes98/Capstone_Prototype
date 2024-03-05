@@ -12,8 +12,12 @@ public class T_UnitStats : MonoBehaviour
     [SerializeField] bool _isEnemy;
 
     [Header("TEMPORARY VALUE REQUIRED")]
-    public float _damageValue;
-    public float _unitMoveSpeed;
+    public float _DamageValue;
+    public float _UnitMoveSpeed;
+    public float _AttackDuration;
+
+    // [Header("DEBUG ONLY")]
+    // [SerializeField] bool _isUnitDead;
 
 
 

@@ -23,7 +23,7 @@ MonoBehaviour:
   Defence: 5
   AttackSpeed: 1
   CriticalHitRate: 5
-  SkillPower: 5
+  SkillPower: 20
   MaxEnergy: 20
   SkillAutoName: TangoSkill
   SkillDuration: 5

@@ -6,7 +6,7 @@ public class T_UnitBattleRecorder : MonoBehaviour
 {
     #region ================= Variables ============================= 
 
-    T_UnitCombatManager t_Unit;
+    T_UnitStats t_Unit;
     T_UnitHealth t_UnitHealth;
 
     List<float> _totalDamageTaken;
@@ -17,7 +17,7 @@ public class T_UnitBattleRecorder : MonoBehaviour
     #endregion ===============================================
     private void Start()
     {
-        t_Unit = GetComponentInParent<T_UnitCombatManager>();
+        t_Unit = GetComponentInParent<T_UnitStats>();
         t_UnitHealth = GetComponentInParent<T_UnitHealth>();
         t_UnitHealth.Take_Damage_Event += UpdateUnitTakenDamage;
 

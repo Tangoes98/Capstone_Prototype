@@ -13,17 +13,17 @@ public class T_UnitMovement : MonoBehaviour
 
     T_LevelManager _LevelManager;
     T_UIManager _UIManager;
-    T_UnitCombatManager _unitCombatMgr;
+    T_UnitCombat _UnitCombatMgr;
     NavMeshAgent _agent;
     T_UnitStats _UnitStats;
-    UnitAttribute _unitAttributes;
+    UnitAttribute _UnitAttributes;
 
 
 
     [SerializeField] bool _isActive;
     [Header("DEBUG")]
     [SerializeField] UnitMovementState _uniMovementStates;
-    [SerializeField] T_UnitCombatManager _moveToTarget;
+    [SerializeField] T_UnitCombat _moveToTarget;
 
     [Header("DEBUG: Movement")]
     [SerializeField] float _unitMoveSpeed;
@@ -48,10 +48,10 @@ public class T_UnitMovement : MonoBehaviour
         _LevelManager = T_LevelManager.Instance;
         _UIManager = T_UIManager.Instance;
 
-        _unitCombatMgr = GetComponent<T_UnitCombatManager>();
+        _UnitCombatMgr = GetComponent<T_UnitCombat>();
         _UnitStats = GetComponent<T_UnitStats>();
-        _unitAttributes = _UnitStats.G_GetUnitAttributes();
-        InitializeUnitAttributes(_unitAttributes);
+        _UnitAttributes = _UnitStats.G_GetUnitAttributes();
+        InitializeUnitAttributes(_UnitAttributes);
 
         _uniMovementStates = UnitMovementState.StopMoving;
 
@@ -66,12 +66,12 @@ public class T_UnitMovement : MonoBehaviour
         switch (_uniMovementStates)
         {
             case UnitMovementState.OnMoving:
-                _unitCombatMgr.G_LookingForOpponents();
-                UnitMovement();
+                _UnitCombatMgr.G_LookingForOpponents();
+                UnitMovement(_unitMoveSpeed);
                 break;
 
             case UnitMovementState.StopMoving:
-                StopMovement();
+                UnitMovement(0f);
                 break;
         }
 
@@ -82,7 +82,7 @@ public class T_UnitMovement : MonoBehaviour
 
     void InitializeUnitAttributes(UnitAttribute uatb)
     {
-        _unitMoveSpeed = _UnitStats._unitMoveSpeed;
+        _unitMoveSpeed = _UnitStats._UnitMoveSpeed;
     }
 
     #region -------------- Event Methods ---------------------------
@@ -98,15 +98,15 @@ public class T_UnitMovement : MonoBehaviour
     }
     #endregion
     #region -------------------- Movement ----------------------
-    void UnitMovement()
+    void UnitMovement(float moveSpeed)
     {
-        if (_UnitStats.G_IsEnemyUnit()) MoveToTarget(_LevelManager.G_GetFriendList());
-        else MoveToTarget(_LevelManager.G_GetEnemyList());
+        if (_UnitStats.G_IsEnemyUnit()) MoveToTarget(_LevelManager.G_GetFriendList(), moveSpeed);
+        else MoveToTarget(_LevelManager.G_GetEnemyList(), moveSpeed);
     }
 
-    void MoveToTarget(List<T_UnitCombatManager> opponents)
+    void MoveToTarget(List<T_UnitCombat> opponents, float moveSpeed)
     {
-        _agent.speed = _unitMoveSpeed;
+        _agent.speed = moveSpeed;
         //* Check if still opponent unit left
         if (opponents.Count < 1)
         {
@@ -114,7 +114,7 @@ public class T_UnitMovement : MonoBehaviour
             return;
         }
 
-        T_UnitCombatManager target = GetClosestOpponentUnit(opponents);
+        T_UnitCombat target = GetClosestOpponentUnit(opponents);
 
         // Move to opponent
         Vector3 targetPosition = target.transform.position;
@@ -122,12 +122,12 @@ public class T_UnitMovement : MonoBehaviour
     }
 
     //* Based on the unit list, look for the closest unit returned as target
-    T_UnitCombatManager GetClosestOpponentUnit(List<T_UnitCombatManager> units)
+    T_UnitCombat GetClosestOpponentUnit(List<T_UnitCombat> units)
     {
         if (units.Count < 1) return null;
 
         List<float> distances = new();
-        Dictionary<float, T_UnitCombatManager> unitDic = new();
+        Dictionary<float, T_UnitCombat> unitDic = new();
         foreach (var unit in units)
         {
             float dis = Vector3.Distance(unit.transform.position, this.transform.position);
