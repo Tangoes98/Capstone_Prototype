@@ -13,6 +13,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 95df87e219d3d2943af747907132f688, type: 2}
+    - target: {fileID: 2300421451017504364, guid: 0e752d04abd140a49873428c1d2e4bcf,
+        type: 3}
+      propertyPath: _isEnemy
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3244205253640434323, guid: 0e752d04abd140a49873428c1d2e4bcf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -76,7 +81,7 @@ PrefabInstance:
     - target: {fileID: 5941371835833731377, guid: 0e752d04abd140a49873428c1d2e4bcf,
         type: 3}
       propertyPath: _isEnemy
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

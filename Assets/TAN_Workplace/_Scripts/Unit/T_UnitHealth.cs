@@ -1,19 +1,22 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class T_UnitHealth : MonoBehaviour
 {
 
     #region ============= Variables =================
+    T_UnitStats _UnitStats;
+    UnitAttribute _unitAttributes;
 
-    [Header("Field_value_required")]
-    [SerializeField] float _health;
 
+
+    [SerializeField] bool _isActive;
     [Header("DEBUG_VIEW")]
     [SerializeField] bool _isDead;
+
+    [Header("DEBUG: Health")]
+    [SerializeField] float _health;
+    [SerializeField] float _shield;
     float _maxHealth;
 
     #endregion
@@ -32,6 +35,10 @@ public class T_UnitHealth : MonoBehaviour
 
     void Start()
     {
+        _UnitStats = GetComponent<T_UnitStats>();
+        _unitAttributes = _UnitStats.G_GetUnitAttributes();
+        InitializeUnitAttributes(_unitAttributes);
+
         _maxHealth = _health;
         _isDead = false;
     }
@@ -42,7 +49,14 @@ public class T_UnitHealth : MonoBehaviour
 
     }
     #endregion
-    #region ============== Functions =================
+    #region ============== Methods =================
+    void InitializeUnitAttributes(UnitAttribute uatb)
+    {
+        _health = uatb.Health;
+        _shield = uatb.Shield;
+
+    }
+
     void TakeDamage(float damage)
     {
         _health -= damage;

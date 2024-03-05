@@ -21,8 +21,8 @@ public class T_LevelManager : MonoBehaviour
     #region =============== Variables =======================
 
     [SerializeField] GameObject _unitSpawner;
-    [SerializeField] List<T_Unit> _enemyList;
-    [SerializeField] List<T_Unit> _friendList;
+    [SerializeField] List<T_UnitCombatManager> _enemyList;
+    [SerializeField] List<T_UnitCombatManager> _friendList;
 
 
 
@@ -37,8 +37,8 @@ public class T_LevelManager : MonoBehaviour
     #endregion
     #region =================== Public ============================
 
-    public List<T_Unit> G_GetEnemyList() => _enemyList;
-    public List<T_Unit> G_GetFriendList() => _friendList;
+    public List<T_UnitCombatManager> G_GetEnemyList() => _enemyList;
+    public List<T_UnitCombatManager> G_GetFriendList() => _friendList;
 
 
     public event Action Event_GameOver;
@@ -65,7 +65,7 @@ public class T_LevelManager : MonoBehaviour
 
     void GetAllUnitIntoUnitList()
     {
-        T_Unit[] units = _unitSpawner.GetComponentsInChildren<T_Unit>();
+        T_UnitCombatManager[] units = _unitSpawner.GetComponentsInChildren<T_UnitCombatManager>();
         foreach (var unit in units)
         {
             if (unit.G_IsEnemyUnit()) _enemyList.Add(unit);
@@ -94,7 +94,7 @@ public class T_LevelManager : MonoBehaviour
     }
 
 
-    bool IsUnitListEmpty(List<T_Unit> untiList)
+    bool IsUnitListEmpty(List<T_UnitCombatManager> untiList)
     {
         if (untiList.Count < 1) return true;
         else return false;

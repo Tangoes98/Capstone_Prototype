@@ -15,21 +15,18 @@ public class T_UnitLocalUI : MonoBehaviour
     [SerializeField] Image _energyBarImage;
 
 
-    T_Unit _Unit;
+    T_UnitCombatManager _Unit;
     T_UnitHealth _UnitHealth;
     T_UnitSkillAction _UnitSkillAction;
 
     #region ======================== Public =========================
     public void G_UpdateSkillActionText(float f) => UpdateSkillActionText(f);
 
-    #endregion
-
-
-
+    #endregion =======================================================
 
     private void Start()
     {
-        _Unit = GetComponentInParent<T_Unit>();
+        _Unit = GetComponentInParent<T_UnitCombatManager>();
         _UnitHealth = GetComponentInParent<T_UnitHealth>();
         _UnitSkillAction = GetComponentInParent<T_UnitSkillAction>();
 

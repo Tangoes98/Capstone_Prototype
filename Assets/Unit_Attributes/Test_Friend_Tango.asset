@@ -10,22 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7956b78e62098444c9e76d165feebcc3, type: 3}
-  m_Name: Test_Unit1
+  m_Name: Test_Friend_Tango
   m_EditorClassIdentifier: 
   UnitName: Tango
   UnitBindA: TBA
   UnitBindALevel: 2
   UnitBindB: TBB
   UnitBindBLevel: 1
-  Health: 0
-  Attack: 0
-  Defence: 0
-  AttackSpeed: 0
-  CriticalHitRate: 0
-  SkillStrength: 0
-  MaxEnergy: 0
-  ActiveSkill: 
-  SkillDuration: 0
-  Range: 0
-  EnergyAutoRecovery: 0
-  EnergyDamageRecovery: 0
+  Health: 100
+  Shield: 100
+  Attack: 20
+  Defence: 5
+  AttackSpeed: 1
+  CriticalHitRate: 5
+  SkillPower: 5
+  MaxEnergy: 20
+  SkillAutoName: TangoSkill
+  SkillDuration: 5
+  Range: 5
+  EnergyAutoRecovery: 1
+  EnergyPerDamageRecovery: 2

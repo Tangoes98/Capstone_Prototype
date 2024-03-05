@@ -1,28 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Unit", menuName = "ScriptableObjects/CreatNewUnitAttributeScriptableObject", order = 1)]
 public class SO_UnitAttribute : ScriptableObject
 {
-    // !Should never modify variables during playmode! // 
+    // !Should never modify variables during playmode! //
+
+    [Header("======================")]
     public string UnitName;
     public string UnitBindA;
     public int UnitBindALevel;
     public string UnitBindB;
     public int UnitBindBLevel;
+
+    [Header("======================")]
     public float Health;
+    public float Shield;
     public float Attack;
     public float Defence;
     public float AttackSpeed;
     public float CriticalHitRate;
-    public float SkillStrength;
+
+    [Header("======================")]
+    public float SkillPower;
     public float MaxEnergy;
-    public string ActiveSkill;
+    public string SkillAutoName;
     public float SkillDuration;
     public float Range;
     public float EnergyAutoRecovery;
-    public float EnergyDamageRecovery;
+    public float EnergyPerDamageRecovery;
 
     // public string UnitName { get; private set; }
     // public string UnitBindA { get; private set; }

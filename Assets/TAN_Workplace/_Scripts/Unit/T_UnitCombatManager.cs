@@ -1,95 +1,79 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class T_Unit : MonoBehaviour
+
+
+public enum UnitCombatState
 {
-    enum UnitCombatState
-    {
-        Idle, ReadyToCombat, Combat, SkillAction, ActionCoolDown
-    }
-    enum UnitMovementState
-    {
-        OnMoving, StopMoving
-    }
+    Idle, ReadyToCombat, Combat, WaitingSkillAction, ActionCoolDown
+}
+
+public class T_UnitCombatManager : MonoBehaviour
+{
 
     #region ============= Variables =============
     //* Instances
     T_LevelManager _LevelManager;
     T_UIManager _UIManager;
+    T_UnitMovement _UnitMovement;
+    T_UnitStats _UnitStats;
+    UnitAttribute _unitAttributes;
 
 
     [SerializeField] bool _isActive;
-
-    //todo: Read Scriptable Object here
-    [SerializeField] SO_UnitAttribute _unitAttributeSO;
-    //[SerializeField] UnitAttribute _unitAttributeInfo;
-
-
-    [Header("DEBUG_VIEW")]
+    [Header("DEBUG")]
     [SerializeField] bool _attackAvaliable;
     [SerializeField] UnitCombatState _unitCombatStates;
-    [SerializeField] UnitMovementState _uniMovementStates;
-    [SerializeField] T_Unit _attackTarget;
-
-    [Header("====Field_value_required=====")]
+    [SerializeField] T_UnitCombatManager _attackTarget;
     [SerializeField] bool _isEnemy;
 
 
-    [Header("Movement")]
-    [SerializeField] float _unitMoveSpeed;
-
-    [Header("Attack")]
+    [Header("DEBUG: Attack")]
     [SerializeField] float _attackRange;
-    [SerializeField] float _attackValue;
+    [SerializeField] float _attackDamageValue;
     [SerializeField] float _attackSpeed;
+    [SerializeField] float _attack;
+    [SerializeField] float _defence;
+    [SerializeField] float _criticalHitRate;
     float _attackTimer;
 
-    NavMeshAgent _agent;
     #endregion
     #region =================== public =========================
     public bool G_IsEnemyUnit() => _isEnemy;
     public float G_GetAttackCD_UIFillAmount() => _attackTimer / _attackSpeed;
 
-    public T_Unit G_GetAttackTarget() => _attackTarget;
+    public T_UnitCombatManager G_GetAttackTarget() => _attackTarget;
     public event Action Event_DealDamage;
+
+    public void G_LookingForOpponents() => LookingForOpponents();
 
     #endregion
     #region ================= MonoBehaviour ======================
-    void Awake()
-    {
-        // _unitAttributeInfo. = _unitAttributeSO;
-    }
     void Start()
     {
 
-        _agent = this.GetComponent<NavMeshAgent>();
+        _isActive = false;
 
         _LevelManager = T_LevelManager.Instance;
         _UIManager = T_UIManager.Instance;
 
-        _attackTimer = _attackSpeed;
+        _UnitMovement = GetComponent<T_UnitMovement>();
+        _UnitStats = GetComponent<T_UnitStats>();
+        _unitAttributes = _UnitStats.G_GetUnitAttributes();
+        InitializeUnitAttributes(_unitAttributes);
 
+        _attackTimer = _attackSpeed;
         _unitCombatStates = UnitCombatState.Idle;
-        _uniMovementStates = UnitMovementState.StopMoving;
 
         _UIManager.Event_BattleStart += OnBattleStartEvent;
         _LevelManager.Event_GameOver += OnGameOverEvent;
-
-        _isActive = false;
-
-
 
     }
 
     void Update()
     {
         if (!_isActive) return;
-
 
         TargetValidation();
         IsAbleToCombat();
@@ -109,7 +93,7 @@ public class T_Unit : MonoBehaviour
                 AttackAction(_attackTarget);
                 break;
 
-            case UnitCombatState.SkillAction:
+            case UnitCombatState.WaitingSkillAction:
                 break;
 
             case UnitCombatState.ActionCoolDown:
@@ -117,18 +101,6 @@ public class T_Unit : MonoBehaviour
                 break;
         }
 
-
-        switch (_uniMovementStates)
-        {
-            case UnitMovementState.OnMoving:
-                LookingForOpponents();
-                UnitMovement();
-                break;
-
-            case UnitMovementState.StopMoving:
-                StopMovement();
-                break;
-        }
     }
     private void OnDrawGizmos()
     {
@@ -136,19 +108,22 @@ public class T_Unit : MonoBehaviour
     }
     #endregion
     #region ============= Method ===============
-    void Init()
+    void InitializeUnitAttributes(UnitAttribute uatb)
     {
-        //todo: implement initialization here
+        // implement initialization here only if too much code under Start()
+        //* Initialize data from UnitAttribute from T_UnitStats class.
+        _isEnemy = _UnitStats.G_IsEnemyUnit();
+        _attackRange = uatb.Range;
+        _attackSpeed = uatb.AttackSpeed;
+        _attackDamageValue = _UnitStats._damageValue;
+
+        _attack = uatb.Attack;
+        _defence = uatb.Defence;
+        _criticalHitRate = uatb.CriticalHitRate;
     }
 
-    void UpdateUnitState()
-    {
-
-    }
-
-    // ----- StateMachine related ------
+    // *----- StateMachine related ------
     void SwitchCombatState(UnitCombatState st) => _unitCombatStates = st;
-    void SwitchMovementState(UnitMovementState st) => _uniMovementStates = st;
 
     #region -------------- Event methods --------------
     void OnBattleStartEvent()
@@ -167,13 +142,14 @@ public class T_Unit : MonoBehaviour
         if (_isEnemy) ValidCurrentTargetUnit(_attackTarget, _LevelManager.G_GetFriendList());
         else ValidCurrentTargetUnit(_attackTarget, _LevelManager.G_GetEnemyList());
     }
-    // Check if the current target unit is active, else remove from unitList.
-    void ValidCurrentTargetUnit(T_Unit targetUnit, List<T_Unit> units)
+
+    //* Check if the current target unit is active, else remove from unitList.
+    void ValidCurrentTargetUnit(T_UnitCombatManager targetUnit, List<T_UnitCombatManager> units)
     {
         if (!targetUnit)
         {
             //Debug.Log("No enemies insight");
-            SwitchMovementState(UnitMovementState.OnMoving);
+            _UnitMovement.G_SwitchMovementState(UnitMovementState.OnMoving);
             return;
         }
 
@@ -185,25 +161,7 @@ public class T_Unit : MonoBehaviour
         }
     }
 
-    // Based on the unit list, look for the closest unit returned as target
-    T_Unit GetClosestOpponentUnit(List<T_Unit> units)
-    {
-        if (units.Count < 1) return null;
-
-        List<float> distances = new();
-        Dictionary<float, T_Unit> unitDic = new();
-        foreach (var unit in units)
-        {
-            float dis = Vector3.Distance(unit.transform.position, this.transform.position);
-            distances.Add(dis);
-            unitDic.Add(dis, unit);
-
-        }
-        float targetDistance = Mathf.Min(distances.ToArray());
-        return unitDic[targetDistance];
-    }
-
-    // Check if the unit is able to combat
+    //* Check if the unit is able to combat
     void IsAbleToCombat()
     {
         if (_attackTimer == _attackSpeed) _attackAvaliable = true;
@@ -212,13 +170,13 @@ public class T_Unit : MonoBehaviour
     }
     #endregion
     #region ---------------------- Combat ------------------------
-    void AttackAction(T_Unit target)
+    void AttackAction(T_UnitCombatManager target)
     {
         if (!target) return;
 
         if (target.TryGetComponent(out T_UnitHealth health))
         {
-            health.G_DealDamage(_attackValue);
+            health.G_DealDamage(_attackDamageValue);
             //Debug.Log($"Deal {_attackValue} damage to {target}");
             Event_DealDamage?.Invoke();
 
@@ -241,7 +199,7 @@ public class T_Unit : MonoBehaviour
         if (_isEnemy) SearchEnemyInRange(_LevelManager.G_GetFriendList(), _attackRange);
         else SearchEnemyInRange(_LevelManager.G_GetEnemyList(), _attackRange);
     }
-    void SearchEnemyInRange(List<T_Unit> opponents, float range)
+    void SearchEnemyInRange(List<T_UnitCombatManager> opponents, float range)
     {
         foreach (var unit in opponents)
         {
@@ -249,40 +207,11 @@ public class T_Unit : MonoBehaviour
 
             _attackTarget = unit;
             //Debug.Log("Found enemy");
-            SwitchMovementState(UnitMovementState.StopMoving);
+            _UnitMovement.G_SwitchMovementState(UnitMovementState.StopMoving);
             SwitchCombatState(UnitCombatState.ReadyToCombat);
         }
     }
     #endregion
-    #region -------------------- Movement ----------------------
-    void UnitMovement()
-    {
-        if (_isEnemy) MoveToTarget(_LevelManager.G_GetFriendList());
-        else MoveToTarget(_LevelManager.G_GetEnemyList());
-    }
-    void MoveToTarget(List<T_Unit> opponents)
-    {
-        _agent.speed = _unitMoveSpeed;
-        // Check if still opponent unit left
-        if (opponents.Count < 1)
-        {
-            SwitchMovementState(UnitMovementState.StopMoving);
-            return;
-        }
-
-        T_Unit target = GetClosestOpponentUnit(opponents);
-
-        // Move to opponent
-        Vector3 targetPosition = target.transform.position;
-        _agent.destination = targetPosition;
-    }
-    void StopMovement()
-    {
-        //_agent.destination = transform.position;
-        _agent.speed = 0f;
-    }
-    #endregion
-
     #endregion
 
 

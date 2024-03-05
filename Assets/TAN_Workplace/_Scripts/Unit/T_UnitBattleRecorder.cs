@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class T_UnitRecorder : MonoBehaviour
+public class T_UnitBattleRecorder : MonoBehaviour
 {
     #region ================= Variables ============================= 
 
-    T_Unit t_Unit;
+    T_UnitCombatManager t_Unit;
     T_UnitHealth t_UnitHealth;
 
     List<float> _totalDamageTaken;
@@ -17,7 +17,7 @@ public class T_UnitRecorder : MonoBehaviour
     #endregion ===============================================
     private void Start()
     {
-        t_Unit = GetComponentInParent<T_Unit>();
+        t_Unit = GetComponentInParent<T_UnitCombatManager>();
         t_UnitHealth = GetComponentInParent<T_UnitHealth>();
         t_UnitHealth.Take_Damage_Event += UpdateUnitTakenDamage;
 

@@ -776,7 +776,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3244205253640434323}
+  - component: {fileID: 2300421451017504364}
   - component: {fileID: 2306153612987525006}
+  - component: {fileID: 3011407661416623598}
   - component: {fileID: 5941371835833731377}
   - component: {fileID: 1414998989212783783}
   - component: {fileID: 4161276798544300989}
@@ -805,6 +807,41 @@ Transform:
   - {fileID: 687902713052844134}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2300421451017504364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4645874366697520143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 444082e5171affe4fb898a959c3ab0e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitAttributeSO: {fileID: 0}
+  _unitAttribute:
+    UnitName: 
+    UnitBindA: 
+    UnitBindALevel: 0
+    UnitBindB: 
+    UnitBindBLevel: 0
+    Health: 0
+    Shield: 0
+    Attack: 0
+    Defence: 0
+    AttackSpeed: 0
+    CriticalHitRate: 0
+    SkillPower: 0
+    MaxEnergy: 0
+    SkillAutoName: 
+    SkillDuration: 0
+    Range: 0
+    EnergyAutoRecovery: 0
+    EnergyPerDamageRecovery: 0
+  _isEnemy: 0
+  _damageValue: 1
+  _unitMoveSpeed: 5
 --- !u!195 &2306153612987525006
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -827,6 +864,22 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &3011407661416623598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4645874366697520143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89216c406eb1f9a49a191f610e2395f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isActive: 0
+  _uniMovementStates: 0
+  _moveToTarget: {fileID: 0}
+  _unitMoveSpeed: 0
 --- !u!114 &5941371835833731377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -840,16 +893,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isActive: 0
-  _unitAttributeSO: {fileID: 0}
   _attackAvaliable: 0
   _unitCombatStates: 0
-  _uniMovementStates: 1
   _attackTarget: {fileID: 0}
   _isEnemy: 0
-  _unitMoveSpeed: 3
-  _attackRange: 4
-  _attackValue: 12
-  _attackSpeed: 5
+  _attackRange: 0
+  _attackDamageValue: 0
+  _attackSpeed: 0
+  _attack: 0
+  _defence: 0
+  _criticalHitRate: 0
 --- !u!114 &1414998989212783783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -864,13 +917,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isActive: 0
   _unitSkillActionStates: 0
-  _skillStrength: 20
+  _skillPower: 0
   _isSkillActionReady: 0
-  _maxEnergy: 10
+  _maxEnergy: 0
   _currentEnergy: 0
   _skillDuration: 0
-  _energyAutoRecovery: 1
-  _energyDamageRecovery: 2
+  _energyAutoRecovery: 0
+  _energyPerDamageRecovery: 0
 --- !u!114 &4161276798544300989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -883,8 +936,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 560bf07617e89d54c8addf952a83b900, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 20
+  _isActive: 0
   _isDead: 0
+  _health: 0
+  _shield: 0
 --- !u!1 &4863941515674930562
 GameObject:
   m_ObjectHideFlags: 0
