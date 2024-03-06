@@ -32,9 +32,9 @@ public class T_UnitCombat : MonoBehaviour
     [Header("DEBUG")]
     [SerializeField] bool _attackAvaliable;
     [SerializeField] UnitCombatState _unitCombatStates;
-    [SerializeField] T_UnitCombat _attackTarget;
+    [SerializeField] T_UnitStats _attackTarget;
     [SerializeField] bool _isEnemy;
-    [SerializeField] bool _isDead;
+    // [SerializeField] bool _isDead;
 
     [SerializeField] bool _stopCombat;
 
@@ -58,13 +58,13 @@ public class T_UnitCombat : MonoBehaviour
     public bool G_IsEnemyUnit() => _isEnemy;
     public float G_GetAttackCD_UIFillAmount() => _attackTimer / _attackSpeed;
 
-    public T_UnitCombat G_GetAttackTarget() => _attackTarget;
+    public T_UnitStats G_GetAttackTarget() => _attackTarget;
     public event Action Event_DealDamage;
 
     public void G_LookingForOpponents() => LookingForOpponents();
 
-    public bool G_GetIsUnitDead() => _isDead;
-    public void G_SetIsUnitDead(bool bvalue) => _isDead = bvalue;
+    // public bool G_GetIsUnitDead() => _isDead;
+    // public void G_SetIsUnitDead(bool bvalue) => _isDead = bvalue;
 
     public UnitCombatState G_GetState() => _unitCombatStates;
 
@@ -84,7 +84,7 @@ public class T_UnitCombat : MonoBehaviour
         _UnitMovement = GetComponent<T_UnitMovement>();
         _UnitSkillAction = GetComponent<T_UnitSkillAction>();
 
-        _isDead = false;
+        // _isDead = false;
 
         _attackTimer = _attackSpeed;
         _attackDurationTimer = _attackDuration;
@@ -121,7 +121,6 @@ public class T_UnitCombat : MonoBehaviour
                     SwitchCombatState(UnitCombatState.CombatCoolDown);
                     return;
                 }
-
 
                 SwitchCombatState(UnitCombatState.CombatHolding);
                 break;
@@ -190,7 +189,7 @@ public class T_UnitCombat : MonoBehaviour
     }
 
     //* Check if the current target unit is active, else remove from unitList.
-    void ValidCurrentTargetUnit(T_UnitCombat targetUnit, List<T_UnitCombat> units)
+    void ValidCurrentTargetUnit(T_UnitStats targetUnit, List<T_UnitStats> units)
     {
         if (!targetUnit)
         {
@@ -223,7 +222,7 @@ public class T_UnitCombat : MonoBehaviour
     // }
     #endregion
     #region ---------------------- Combat ------------------------
-    void AttackAction(T_UnitCombat target)
+    void AttackAction(T_UnitStats target)
     {
         if (!target) return;
 
@@ -257,13 +256,6 @@ public class T_UnitCombat : MonoBehaviour
             SwitchCombatState(UnitCombatState.CombatCoolDown);
         }
     }
-
-
-
-
-
-
-
     #endregion
     #region -------------- Scouting ------------------
     void LookingForOpponents()
@@ -271,7 +263,7 @@ public class T_UnitCombat : MonoBehaviour
         if (_isEnemy) SearchEnemyInRange(_LevelManager.G_GetFriendList(), _attackRange);
         else SearchEnemyInRange(_LevelManager.G_GetEnemyList(), _attackRange);
     }
-    void SearchEnemyInRange(List<T_UnitCombat> opponents, float range)
+    void SearchEnemyInRange(List<T_UnitStats> opponents, float range)
     {
         foreach (var unit in opponents)
         {
@@ -285,10 +277,4 @@ public class T_UnitCombat : MonoBehaviour
     }
     #endregion
     #endregion
-
-
-
-
-
-
 }

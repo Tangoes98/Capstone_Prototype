@@ -95,7 +95,7 @@ public class T_UnitHealth : MonoBehaviour
     {
         _health = 0;
         _isDead = true;
-        _UnitCombatManager.G_SetIsUnitDead(_isDead);
+        _UnitStats.G_SetIsUnitDead(_isDead);
 
         this.gameObject.SetActive(false);
     }

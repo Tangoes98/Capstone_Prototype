@@ -170,7 +170,7 @@ public class T_UnitSkillAction : MonoBehaviour
     {
         _isSkillActionReady = false;
 
-        T_UnitCombat target = _UnitCombatMgr.G_GetAttackTarget();
+        T_UnitStats target = _UnitCombatMgr.G_GetAttackTarget();
         if (!target)
         {
             Debug.Log("NO Target Available");
@@ -193,7 +193,7 @@ public class T_UnitSkillAction : MonoBehaviour
     {
         _currentEnergy = _maxEnergy;
 
-        T_UnitCombat target = _UnitCombatMgr.G_GetAttackTarget();
+        T_UnitStats target = _UnitCombatMgr.G_GetAttackTarget();
         if (!target) return;
 
         _isSkillActionReady = true;

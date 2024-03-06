@@ -16,20 +16,17 @@ public class T_UnitStats : MonoBehaviour
     public float _UnitMoveSpeed;
     public float _AttackDuration;
 
-    // [Header("DEBUG ONLY")]
-    // [SerializeField] bool _isUnitDead;
-
-
+    [Header("DEBUG ONLY")]
+    [SerializeField] bool _isDead;
+    
 
     #endregion
     #region ======================== Public ==============================
     public UnitAttribute G_GetUnitAttributes() => _unitAttribute;
     public bool G_IsEnemyUnit() => _isEnemy;
 
-
-
-
-
+    public bool G_GetIsUnitDead() => _isDead;
+    public void G_SetIsUnitDead(bool bvalue) => _isDead = bvalue;
 
     #endregion =======================================================
     private void Awake()
@@ -58,6 +55,8 @@ public class T_UnitStats : MonoBehaviour
         _unitAttributeSO.EnergyPerDamageRecovery
     );
     }
+
+
 
 
 

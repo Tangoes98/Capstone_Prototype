@@ -24,6 +24,7 @@ public class T_UnitLocalUI : MonoBehaviour
     T_UnitCombat _UnitCombatMgr;
     T_UnitHealth _UnitHealth;
     T_UnitSkillAction _UnitSkillAction;
+    T_UnitStats _UnitStats;
 
     #region ======================== Public =========================
 
@@ -34,6 +35,7 @@ public class T_UnitLocalUI : MonoBehaviour
         _UnitCombatMgr = GetComponentInParent<T_UnitCombat>();
         _UnitHealth = GetComponentInParent<T_UnitHealth>();
         _UnitSkillAction = GetComponentInParent<T_UnitSkillAction>();
+        _UnitStats = GetComponentInParent<T_UnitStats>();
 
         _UnitHealth.Take_Damage_Event += RegularDamagePopUp;
     }
@@ -80,13 +82,13 @@ public class T_UnitLocalUI : MonoBehaviour
     {
         GameObject dmg_obj = Instantiate(_damagePopup, _damagePopup_parent).gameObject;
         dmg_obj.GetComponent<Animator>().SetTrigger("Popup_anim");
-        
+
         if (d < 1)
             dmg_obj.GetComponent<TextMeshProUGUI>().text = "MISS";
         else
             dmg_obj.GetComponent<TextMeshProUGUI>().text = d.ToString();
 
-        if (_UnitCombatMgr.G_GetIsUnitDead()) return;
+        if (_UnitStats.G_GetIsUnitDead()) return;
         StartCoroutine(Wait(1.5f, dmg_obj));
     }
 

@@ -23,7 +23,7 @@ public class T_UnitMovement : MonoBehaviour
     [SerializeField] bool _isActive;
     [Header("DEBUG")]
     [SerializeField] UnitMovementState _uniMovementStates;
-    [SerializeField] T_UnitCombat _moveToTarget;
+    [SerializeField] T_UnitStats _moveToTarget;
 
     [Header("DEBUG: Movement")]
     [SerializeField] float _unitMoveSpeed;
@@ -104,7 +104,7 @@ public class T_UnitMovement : MonoBehaviour
         else MoveToTarget(_LevelManager.G_GetEnemyList(), moveSpeed);
     }
 
-    void MoveToTarget(List<T_UnitCombat> opponents, float moveSpeed)
+    void MoveToTarget(List<T_UnitStats> opponents, float moveSpeed)
     {
         _agent.speed = moveSpeed;
         //* Check if still opponent unit left
@@ -114,7 +114,7 @@ public class T_UnitMovement : MonoBehaviour
             return;
         }
 
-        T_UnitCombat target = GetClosestOpponentUnit(opponents);
+        T_UnitStats target = GetClosestOpponentUnit(opponents);
 
         // Move to opponent
         Vector3 targetPosition = target.transform.position;
@@ -122,12 +122,12 @@ public class T_UnitMovement : MonoBehaviour
     }
 
     //* Based on the unit list, look for the closest unit returned as target
-    T_UnitCombat GetClosestOpponentUnit(List<T_UnitCombat> units)
+    T_UnitStats GetClosestOpponentUnit(List<T_UnitStats> units)
     {
         if (units.Count < 1) return null;
 
         List<float> distances = new();
-        Dictionary<float, T_UnitCombat> unitDic = new();
+        Dictionary<float, T_UnitStats> unitDic = new();
         foreach (var unit in units)
         {
             float dis = Vector3.Distance(unit.transform.position, this.transform.position);
