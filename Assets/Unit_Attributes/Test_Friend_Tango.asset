@@ -18,7 +18,7 @@ MonoBehaviour:
   UnitBindB: TBB
   UnitBindBLevel: 1
   Health: 100
-  Shield: 100
+  Shield: 500
   Attack: 20
   Defence: 5
   AttackSpeed: 1
@@ -27,6 +27,6 @@ MonoBehaviour:
   MaxEnergy: 20
   SkillAutoName: TangoSkill
   SkillDuration: 5
-  Range: 5
+  Range: 2
   EnergyAutoRecovery: 1
   EnergyPerDamageRecovery: 2

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum UnitSkillActionState
@@ -19,6 +20,7 @@ public class T_UnitSkillAction : MonoBehaviour
     [SerializeField] UnitSkillActionState _unitSkillActionStates;
 
     T_LevelManager _LevelManager;
+    T_SkillCollection _SkillCollection;
     T_UIManager _UIManager;
     T_UnitCombat _UnitCombatMgr;
     T_UnitHealth _Health;
@@ -46,6 +48,10 @@ public class T_UnitSkillAction : MonoBehaviour
     //public bool G_IsSkillActionReady() => _isSkillActionReady;
     public UnitSkillActionState G_GetState() => _unitSkillActionStates;
 
+    public void G_SwitchSkillActionState(UnitSkillActionState st) => SwitchSkillActionState(st);
+
+    // public event Action Event_SkillActivated;
+
     #endregion
     #region ============= MonoBehaviour =================
     private void Start()
@@ -63,6 +69,7 @@ public class T_UnitSkillAction : MonoBehaviour
         _isSkillActionReady = false;
 
         _LevelManager = T_LevelManager.Instance;
+        _SkillCollection = T_SkillCollection.Instance;
         _UIManager = T_UIManager.Instance;
 
         _unitSkillActionStates = UnitSkillActionState.Debug;
@@ -91,13 +98,16 @@ public class T_UnitSkillAction : MonoBehaviour
                 break;
 
             case UnitSkillActionState.SkillHolding:
+                if (_UnitMovement.G_GetState() == UnitMovementState.MoveToTarget) return;
                 if (_UnitCombatMgr.G_GetState() == UnitCombatState.CombatDuration) return;
 
                 WaitingForTarget();
                 break;
 
             case UnitSkillActionState.SkillActing:
-                SkillActionDamage(_skillPower);
+                //SkillActionDamage(_skillPower);
+                SkillAction(_UnitStats.G_GetSkillIndex());
+                // Event_SkillActivated?.Invoke();
                 break;
 
             case UnitSkillActionState.SkillDuration:
@@ -166,7 +176,28 @@ public class T_UnitSkillAction : MonoBehaviour
 
     #endregion
     #region ------------------------ Skill Action ------------------------
-    void SkillActionDamage(float damageValue)
+    // void SkillActionDamage(float damageValue)
+    // {
+    //     _isSkillActionReady = false;
+
+    //     T_UnitStats target = _UnitCombatMgr.G_GetAttackTarget();
+    //     if (!target)
+    //     {
+    //         Debug.Log("NO Target Available");
+    //         SwitchSkillActionState(UnitSkillActionState.SkillHolding);
+    //         return;
+    //     }
+
+    //     if (target.TryGetComponent(out T_UnitHealth health))
+    //     {
+    //         health.G_DealDamage(damageValue);
+
+    //     }
+
+    //     SwitchSkillActionState(UnitSkillActionState.SkillDuration);
+    // }
+
+    void SkillAction(int skillIndex)
     {
         _isSkillActionReady = false;
 
@@ -178,11 +209,10 @@ public class T_UnitSkillAction : MonoBehaviour
             return;
         }
 
-        if (target.TryGetComponent(out T_UnitHealth health))
-        {
-            health.G_DealDamage(damageValue);
+        Debug.Log("Skill Action Activated");
 
-        }
+        _SkillCollection.G_GetSkillDic()[skillIndex].TakeAction(_UnitStats);
+
 
         SwitchSkillActionState(UnitSkillActionState.SkillDuration);
     }

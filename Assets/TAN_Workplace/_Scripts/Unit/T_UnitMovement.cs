@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 public enum UnitMovementState
 {
-    OnMoving, StopMoving
+    OnMoving, StopMoving, MoveToTarget
 }
 
 public class T_UnitMovement : MonoBehaviour
@@ -20,10 +20,11 @@ public class T_UnitMovement : MonoBehaviour
 
 
 
+
     [SerializeField] bool _isActive;
     [Header("DEBUG")]
     [SerializeField] UnitMovementState _uniMovementStates;
-    [SerializeField] T_UnitStats _moveToTarget;
+    [SerializeField] T_UnitStats _closestTarget;
 
     [Header("DEBUG: Movement")]
     [SerializeField] float _unitMoveSpeed;
@@ -33,7 +34,7 @@ public class T_UnitMovement : MonoBehaviour
     #endregion
     #region ===================== Public ===================
     public void G_SwitchMovementState(UnitMovementState st) => SwitchMovementState(st);
-
+    public UnitMovementState G_GetState() => _uniMovementStates;
 
 
 
@@ -55,8 +56,13 @@ public class T_UnitMovement : MonoBehaviour
 
         _uniMovementStates = UnitMovementState.StopMoving;
 
+        _agent.stoppingDistance = _UnitAttributes.Range;
+
         _UIManager.Event_BattleStart += OnBattleStartEvent;
         _LevelManager.Event_GameOver += OnGameOverEvent;
+        // _UnitStats.UnitSkillAction.Event_SkillActivated += SkillActivatedEvent;
+
+
     }
     private void Update()
     {
@@ -71,7 +77,11 @@ public class T_UnitMovement : MonoBehaviour
                 break;
 
             case UnitMovementState.StopMoving:
-                UnitMovement(0f);
+                StopMovement();
+                break;
+            case UnitMovementState.MoveToTarget:
+                _UnitCombatMgr.G_CurrentAttackTargetValidation();
+                MoveToTarget(_UnitCombatMgr.G_GetAttackTarget(), _unitMoveSpeed);
                 break;
         }
 
@@ -96,6 +106,11 @@ public class T_UnitMovement : MonoBehaviour
     {
         _isActive = false;
     }
+
+    // void SkillActivatedEvent()
+    // {
+    //     SwitchMovementState(UnitMovementState.MoveToTarget);
+    // }
     #endregion
     #region -------------------- Movement ----------------------
     void UnitMovement(float moveSpeed)
@@ -136,13 +151,25 @@ public class T_UnitMovement : MonoBehaviour
 
         }
         float targetDistance = Mathf.Min(distances.ToArray());
-        _moveToTarget = unitDic[targetDistance];
+        _closestTarget = unitDic[targetDistance];
         return unitDic[targetDistance];
     }
 
     void StopMovement()
     {
         _agent.speed = 0f;
+    }
+
+    void MoveToTarget(T_UnitStats target, float moveSpeed)
+    {
+        if (!target)
+        {
+            SwitchMovementState(UnitMovementState.OnMoving);
+            return;
+        }
+        
+        _agent.speed = moveSpeed;
+        _agent.destination = target.transform.position;
     }
     #endregion
 

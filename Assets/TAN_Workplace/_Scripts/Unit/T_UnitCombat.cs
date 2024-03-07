@@ -51,23 +51,29 @@ public class T_UnitCombat : MonoBehaviour
     [SerializeField] float _attackDuration;
     [SerializeField] float _attackDurationTimer;
 
+    [Header("DEBUG: Skill Related")]
+    [SerializeField] List<T_UnitStats> _targetUnitsInSight;
+
 
 
     #endregion
     #region =================== public =========================
+    //* ----- Get ------
     public bool G_IsEnemyUnit() => _isEnemy;
     public float G_GetAttackCD_UIFillAmount() => _attackTimer / _attackSpeed;
-
     public T_UnitStats G_GetAttackTarget() => _attackTarget;
-    public event Action Event_DealDamage;
-
-    public void G_LookingForOpponents() => LookingForOpponents();
-
-    // public bool G_GetIsUnitDead() => _isDead;
-    // public void G_SetIsUnitDead(bool bvalue) => _isDead = bvalue;
-
+    // public float G_GetAttackRange() => _attackRange;
     public UnitCombatState G_GetState() => _unitCombatStates;
+    public List<T_UnitStats> G_GetAllTargetInSight() => _targetUnitsInSight;
+    public void G_LookingForOpponents() => LookingForOpponents();
+    public void G_CurrentAttackTargetValidation() => CurrentAttackTargetValidation(_attackTarget, _attackRange);
 
+    //* ------ Set ------
+    public void G_SetAttackTarget(T_UnitStats target) => _attackTarget = target;
+    public void G_SwitchCombattState(UnitCombatState st) => SwitchCombatState(st);
+
+    //* ------ Event ------
+    public event Action Event_DealDamage;
     #endregion
     #region ================= MonoBehaviour ======================
     void Start()
@@ -92,6 +98,7 @@ public class T_UnitCombat : MonoBehaviour
 
         _UIManager.Event_BattleStart += OnBattleStartEvent;
         _LevelManager.Event_GameOver += OnGameOverEvent;
+        // _UnitSkillAction.Event_SkillActivated += SkillActivatedEvent;
 
     }
 
@@ -115,6 +122,7 @@ public class T_UnitCombat : MonoBehaviour
                 break;
 
             case UnitCombatState.CombatValidation:
+                CurrentAttackTargetValidation(_attackTarget, _attackRange);
                 AttackCDValidation();
                 if (!_attackAvaliable)
                 {
@@ -126,6 +134,7 @@ public class T_UnitCombat : MonoBehaviour
                 break;
 
             case UnitCombatState.CombatHolding:
+                if (_UnitMovement.G_GetState() == UnitMovementState.MoveToTarget) return;
                 if (_UnitSkillAction.G_GetState() == UnitSkillActionState.SkillDuration) return;
 
                 SwitchCombatState(UnitCombatState.CombatActing);
@@ -180,6 +189,11 @@ public class T_UnitCombat : MonoBehaviour
     {
         _isActive = false;
     }
+
+    // void SkillActivatedEvent()
+    // {
+    //     SwitchCombatState(UnitCombatState.CombatValidation);
+    // }
     #endregion
     #region ------------------- Utilities --------------------------------
     void TargetValidation()
@@ -198,12 +212,12 @@ public class T_UnitCombat : MonoBehaviour
             return;
         }
 
-
         if (targetUnit.G_GetIsUnitDead())
         {
             units.Remove(targetUnit);
             _attackTarget = null;
         }
+
     }
 
     //* Check if the unit is able to combat
@@ -265,12 +279,39 @@ public class T_UnitCombat : MonoBehaviour
     }
     void SearchEnemyInRange(List<T_UnitStats> opponents, float range)
     {
+        _targetUnitsInSight.Clear();
+
         foreach (var unit in opponents)
         {
             if (Vector3.Distance(unit.transform.position, this.transform.position) > range) continue;
 
+            _targetUnitsInSight.Add(unit);
+
             _attackTarget = unit;
             //Debug.Log("Found enemy");
+            _UnitMovement.G_SwitchMovementState(UnitMovementState.StopMoving);
+            SwitchCombatState(UnitCombatState.CombatValidation);
+        }
+    }
+    #endregion
+    #region --------------------- Skill Related ------------------
+    void CurrentAttackTargetValidation(T_UnitStats target, float range)
+    {
+        if (!target)
+        {
+            //Debug.Log("No enemies insight");
+            _UnitMovement.G_SwitchMovementState(UnitMovementState.OnMoving);
+            return;
+        }
+
+        if (Vector3.Distance(target.transform.position, this.transform.position) > range)
+        {
+            Debug.Log("Move To Taunt Target");
+            _UnitMovement.G_SwitchMovementState(UnitMovementState.MoveToTarget);
+        }
+        else
+        {
+            Debug.Log("Arrive Taunt Target");
             _UnitMovement.G_SwitchMovementState(UnitMovementState.StopMoving);
             SwitchCombatState(UnitCombatState.CombatValidation);
         }
