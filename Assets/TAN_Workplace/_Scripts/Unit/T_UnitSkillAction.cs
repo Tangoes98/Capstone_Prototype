@@ -164,11 +164,11 @@ public class T_UnitSkillAction : MonoBehaviour
     #region --------------------- Waiting for skill duration -----------------------
     void WaitingForSkillDuration()
     {
-        Debug.Log("Skill Duration");
+        //Debug.Log("Skill Duration");
         _skillDurationTimer -= Time.deltaTime;
         if (_skillDurationTimer < 0)
         {
-            Debug.Log("Skill Duration Over");
+            //Debug.Log("Skill Duration Over");
             _skillDurationTimer = _skillDuration;
             SwitchSkillActionState(UnitSkillActionState.SavingEnergy);
         }
@@ -204,7 +204,7 @@ public class T_UnitSkillAction : MonoBehaviour
         T_UnitStats target = _UnitCombatMgr.G_GetAttackTarget();
         if (!target)
         {
-            Debug.Log("NO Target Available");
+            //Debug.Log("NO Target Available");
             SwitchSkillActionState(UnitSkillActionState.SkillHolding);
             return;
         }

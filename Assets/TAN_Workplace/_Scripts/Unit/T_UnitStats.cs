@@ -21,6 +21,10 @@ public class T_UnitStats : MonoBehaviour
     [SerializeField] bool _isDead;
     [SerializeField] int _skillIndex;
 
+    [SerializeField] BindStruct _bindInfoA;
+    //[SerializeField] BindStruct _bindInfoA;
+    //[SerializeField] BindStruct _bindInfoB;
+
 
     #endregion
     #region ======================== Public ==============================
@@ -30,6 +34,7 @@ public class T_UnitStats : MonoBehaviour
     public T_UnitMovement UnitMovement { get; private set; }
     public T_UnitLocalUI UnitLocalUI { get; private set; }
     public T_UnitSignifier UnitSignifier { get; private set; }
+    public T_UnitBind UnitBind { get; private set; }
 
 
     public UnitAttribute G_GetUnitAttributes() => _unitAttribute;
@@ -39,6 +44,7 @@ public class T_UnitStats : MonoBehaviour
     public void G_SetIsUnitDead(bool bvalue) => _isDead = bvalue;
 
     public int G_GetSkillIndex() => _skillIndex;
+    public BindStruct G_BindInfoA() => _bindInfoA;
 
     #endregion =======================================================
     private void Awake()
@@ -73,6 +79,10 @@ public class T_UnitStats : MonoBehaviour
         UnitMovement = GetComponent<T_UnitMovement>();
         UnitLocalUI = GetComponentInChildren<T_UnitLocalUI>();
         UnitSignifier = GetComponentInChildren<T_UnitSignifier>();
+        UnitBind = GetComponent<T_UnitBind>();
+
+        _bindInfoA = new(_unitAttribute.UnitBindA, _unitAttribute.UnitBindALevel);
+        //_bindInfoB = new(_unitAttribute.UnitBindB, _unitAttribute.UnitBindBLevel);
     }
 
 

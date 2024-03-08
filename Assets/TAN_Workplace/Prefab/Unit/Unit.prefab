@@ -724,6 +724,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3244205253640434323}
   - component: {fileID: 2300421451017504364}
+  - component: {fileID: 3323333697165638667}
   - component: {fileID: 2306153612987525006}
   - component: {fileID: 5941371835833731377}
   - component: {fileID: 1414998989212783783}
@@ -791,6 +792,19 @@ MonoBehaviour:
   _UnitMoveSpeed: 0
   _AttackDuration: 0
   _isDead: 0
+  _skillIndex: 0
+--- !u!114 &3323333697165638667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4645874366697520143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740333bbe7db4d740b6630ddd20c1814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!195 &2306153612987525006
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -877,7 +891,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isActive: 0
   _uniMovementStates: 0
-  _moveToTarget: {fileID: 0}
+  _closestTarget: {fileID: 0}
   _unitMoveSpeed: 0
 --- !u!114 &4161276798544300989
 MonoBehaviour:

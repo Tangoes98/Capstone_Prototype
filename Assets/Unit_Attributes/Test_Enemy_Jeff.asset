@@ -27,6 +27,6 @@ MonoBehaviour:
   MaxEnergy: 20
   SkillAutoName: JeffSmallHouse
   SkillDuration: 5
-  Range: 2
+  Range: 12
   EnergyAutoRecovery: 1
   EnergyPerDamageRecovery: 2

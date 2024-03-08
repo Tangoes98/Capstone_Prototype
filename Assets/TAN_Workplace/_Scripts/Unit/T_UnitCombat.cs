@@ -306,12 +306,10 @@ public class T_UnitCombat : MonoBehaviour
 
         if (Vector3.Distance(target.transform.position, this.transform.position) > range)
         {
-            Debug.Log("Move To Taunt Target");
             _UnitMovement.G_SwitchMovementState(UnitMovementState.MoveToTarget);
         }
         else
         {
-            Debug.Log("Arrive Taunt Target");
             _UnitMovement.G_SwitchMovementState(UnitMovementState.StopMoving);
             SwitchCombatState(UnitCombatState.CombatValidation);
         }
